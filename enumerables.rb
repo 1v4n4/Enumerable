@@ -58,14 +58,28 @@ module Enumerable
     result
   end
 
-  def my_any?
+  def my_any? (args = nill)
     result = false
-    for i in self
+    if block_given?
+      for i in self
       result = true if yield i
     end
+    elsif !block_given? || args != nill
+
+      end
+    elsif
+
     result
   end
 
+  when no block or argument is given returns true if at least one of the collection is not false or nil
+ when no block or argument is given returns false if at least one of the collection is not true
+ when a class is passed as an argument returns true if at least one of the collection is a member of such class::Numeric
+ when a class is passed as an argument returns true if at least one of the collection is a member of such class::Integer
+ when a Regex is passed as an argument returns true if any of the collection matches the Regex
+ when a Regex is passed as an argument returns false if none of the collection matches the Regex
+ when a pattern other than Regex or a Class is given returns false if none of the collection matches the pattern
+ when a pattern other than Regex or a Class is given returns true if any of the collection matches the pattern
   def my_none?
     result = true
     for i in self
