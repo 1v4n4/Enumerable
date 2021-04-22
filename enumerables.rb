@@ -63,6 +63,14 @@ module Enumerable
     mapped
   end
 
+  def my_inject (result)
+    self.my_each do |i|
+      result = yield result, i
+    end
+    result
+  end
+
+
 end
 
 
@@ -70,8 +78,8 @@ end
 hash = {:one => 1, :two => 2}
 hash.my_each {|k, v| puts "#{k} => #{v}"}
 
-arr = [1, 2, 5, 3, 4]
-p arr.my_map {|i| i*3}
+arr = [2, 4, 5]
+p arr.my_inject (1) {|sum, number| sum * number}
 
 friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
 
