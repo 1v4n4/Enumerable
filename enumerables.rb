@@ -28,6 +28,15 @@ module Enumerable
     end
     result
   end
+
+  def my_any?
+    result = false
+    for i in self
+      result = true if yield i
+    end
+    result
+  end
+
 end
 
 
@@ -36,7 +45,7 @@ hash = {:one => 1, :two => 2}
 hash.my_each {|k, v| puts "#{k} => #{v}"}
 
 arr = [1, 2, 5, 3, 4]
-p arr.my_all? {|i| i > 1}
+p arr.my_any? {|i| i > 2}
 
 friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
 
