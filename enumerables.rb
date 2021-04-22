@@ -45,6 +45,16 @@ module Enumerable
     result
   end
 
+  def my_count
+    counter = 0
+    for i in self
+      if yield(i)
+        counter +=1
+      end
+    end
+    return counter
+  end
+
 end
 
 
@@ -53,7 +63,7 @@ hash = {:one => 1, :two => 2}
 hash.my_each {|k, v| puts "#{k} => #{v}"}
 
 arr = [1, 2, 5, 3, 4]
-p arr.my_none? {|i| i > 6}
+p arr.my_count {|i| i > 3}
 
 friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
 
