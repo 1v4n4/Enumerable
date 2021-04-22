@@ -32,25 +32,28 @@ module Enumerable
     selected
   end
 
- when no block or argument is given returns true when none of the collection members are false or nil
- when no block or argument is given returns false when one of the collection members are false or nil
- when a class is passed as an argument returns true if all of the collection is a member of such class::Integer
- when a class is passed as an argument returns true if all of the collection is a member of such class::Numeric
- when a class is passed as an argument returns false if any of the collection is not a member of such class
- when a Regex is passed as an argument returns true if all of the collection matches the Regex
- when a Regex is passed as an argument returns false if any of the collection does not match the Regex
- when a pattern other than Regex or a Class is given returns true if all of the collection matches the pattern
- when a pattern other than Regex or a Class is given returns false if any of the collection does not match the pattern
-
-
-
-  def my_all? (argument)
-    if block_given? == false
-      return tru
-
+  def my_all?(args = nil)
     result = true
-    for i in self
-      result = false unless yield i
+    if block_given?
+      for i in self
+        result = false unless yield i
+      end
+    elsif args.nil?
+      for i in self
+        result = false if i.nil? || i == false
+      end
+    elsif !args.nil? and (args.is_a? Class)
+      for i in self
+        result = false if i.class != args
+      end
+    elsif !args.nil? and (args.is_a? Regexp)
+      for i in self
+        result = false if !(args.match(i))
+      end
+    else
+      for i in self
+        result = false if i != args
+      end
     end
     result
   end
@@ -108,5 +111,5 @@ def multiply_els(ar)
   ar.my_inject(1) {|multiply, num| multiply * num}
 end
 
-arr = {:name => "Ivana", :country => "Montenegero"}
-p arr.my_each_with_index {|val, indx|  puts "value: #{val}| index: #{indx}"}
+arr = [3, 4, 6, 2]
+p arr.my_all? {|num| num > 2}
