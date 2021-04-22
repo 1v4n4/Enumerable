@@ -58,32 +58,61 @@ module Enumerable
     result
   end
 
-  def my_any? (args = nill)
+  def my_any? (args = nil)
     result = false
     if block_given?
       for i in self
-      result = true if yield i
-    end
-    elsif !block_given? || args != nill
-
+        result = true if yield i
       end
-    elsif
-
+    elsif !args.nil? && (args.is_a? Class)
+      for i in self
+        result = true if i.class == args
+      end
+    elsif !args.nil? && (args == Regexp)
+      for i in self
+        result = true if args.match(i)
+      end
+    else
+      for i in self
+        result = true if i == args
+      end
+    end
     result
   end
 
-  when no block or argument is given returns true if at least one of the collection is not false or nil
- when no block or argument is given returns false if at least one of the collection is not true
- when a class is passed as an argument returns true if at least one of the collection is a member of such class::Numeric
- when a class is passed as an argument returns true if at least one of the collection is a member of such class::Integer
- when a Regex is passed as an argument returns true if any of the collection matches the Regex
- when a Regex is passed as an argument returns false if none of the collection matches the Regex
- when a pattern other than Regex or a Class is given returns false if none of the collection matches the pattern
- when a pattern other than Regex or a Class is given returns true if any of the collection matches the pattern
-  def my_none?
+# when no block or argument is given returns true only if none of the collection members is true
+# when no block or argument is given returns false only if one of the collection members is true
+# when a class is passed as an argument returns true if none of the collection is a member of such class
+# when a class is passed as an argument returns true if none of the collection is a member of such class::Numeric
+# when a class is passed as an argument returns false if any of the collection is a member of such class
+# when a Regex is passed as an argument returns true if none of the collection matches the Regex
+# when a Regex is passed as an argument returns false if any of the collection matches the Regex
+# when a pattern other than Regex or a Class is given returns true only if none of the collection matches the pattern
+# when a pattern other than Regex or a Class is given returns false only if one of the collection matches the pattern
+  def my_none?(args = nil)
     result = true
-    for i in self
-      result = false if yield i
+    if block_given?
+      for i in self
+        result = false if yield i
+      end
+    elsif !args.nil? && (args.is_a? Class)
+      for i in self
+        result = false if i.class == args
+      end
+    elsif !args.nil? && (args == Regexp)
+      for i in self
+        result = false if args.match(i)
+      end
+    elsif self.length == 1
+      for i in self
+        if i == nil
+          result = true
+        end
+      end
+    else
+      for i in self
+        result = false if i == args
+      end
     end
     result
   end
@@ -126,4 +155,6 @@ def multiply_els(ar)
 end
 
 arr = [3, 4, 6, 2]
-p arr.my_all? {|num| num > 2}
+arr.my_any? {|num| num > 6}
+
+p [nil].my_none?
