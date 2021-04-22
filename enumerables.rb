@@ -37,6 +37,14 @@ module Enumerable
     result
   end
 
+  def my_none?
+    result = true
+    for i in self
+      result = false if yield i
+    end
+    result
+  end
+
 end
 
 
@@ -45,7 +53,7 @@ hash = {:one => 1, :two => 2}
 hash.my_each {|k, v| puts "#{k} => #{v}"}
 
 arr = [1, 2, 5, 3, 4]
-p arr.my_any? {|i| i > 2}
+p arr.my_none? {|i| i > 6}
 
 friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
 
