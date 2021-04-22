@@ -1,18 +1,21 @@
 module Enumerable
-  def my_each(&block)
-    each(&block)
+  def my_each
+    for i in self
+      yield(i)
+    end
     self
   end
 
   def my_each_with_index
-    each do |i|
+    for i in self
       yield i, i - 1
     end
   end
 
+
   def my_select
     selected = []
-    each do |i|
+    for i in self
       selected.push(i) if yield(i)
     end
     selected
@@ -20,7 +23,7 @@ module Enumerable
 
   def my_all?
     result = true
-    each do |i|
+    for i in self
       result = false unless yield i
     end
     result
@@ -28,7 +31,7 @@ module Enumerable
 
   def my_any?
     result = false
-    each do |i|
+    for i in self
       result = true if yield i
     end
     result
@@ -36,7 +39,7 @@ module Enumerable
 
   def my_none?
     result = true
-    each do |i|
+    for i in self
       result = false if yield i
     end
     result
@@ -44,34 +47,40 @@ module Enumerable
 
   def my_count
     counter = 0
-    each do |i|
-      counter += 1 if yield(i)
+    for i in self
+      if yield(i)
+        counter +=1
+      end
     end
-    counter
+    return counter
   end
 
   def my_map(proc = nil)
     mapped = []
     if proc
-      each do |i|
+      for i in self
         mapped.push(proc.call(i))
       end
     elsif block_given?
-      each do |i|
+      for i in self
         mapped.push(yield i)
       end
     end
     mapped
   end
 
-  def my_inject(result = 0)
-    my_each do |i|
+  def my_inject (result = 0)
+    self.my_each do |i|
       result = yield result, i
     end
     result
   end
+
 end
 
-def multiply_els(arr)
-  arr.my_inject(1) { |multiply, num| multiply * num }
+def multiply_els(ar)
+  ar.my_inject(1) {|multiply, num| multiply * num}
 end
+
+arr = [2, 4, 5]
+p arr.my_map(Proc.new {|x| x * 2})
