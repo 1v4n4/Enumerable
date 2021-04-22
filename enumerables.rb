@@ -63,22 +63,24 @@ module Enumerable
     mapped
   end
 
-  def my_inject (result)
+  def my_inject (result = 0)
     self.my_each do |i|
       result = yield result, i
     end
     result
   end
 
-
 end
 
-
+def multiply_els(ar)
+  ar.my_inject(1) {|multiply, num| multiply * num}
+end
 
 hash = {:one => 1, :two => 2}
 hash.my_each {|k, v| puts "#{k} => #{v}"}
 
 arr = [2, 4, 5]
+p multiply_els(arr)
 p arr.my_inject (1) {|sum, number| sum * number}
 
 friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
