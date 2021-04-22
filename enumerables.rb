@@ -14,7 +14,7 @@ module Enumerable
     if self.class == Array
       for i in self
         yield i, self.index(i)
-      end      
+      end
     elsif ((self.class == Range) || (self.class == Hash))
       for i in self
         yield i, to_a.index(i)
@@ -24,6 +24,7 @@ module Enumerable
 
 
   def my_select
+    return to_enum(:my_each_with_index) unless block_given?
     selected = []
     for i in self
       selected.push(i) if yield(i)
