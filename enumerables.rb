@@ -16,11 +16,17 @@ module Enumerable
   def my_select
     selected = []
     for i in self
-      if yield(i)
-      selected.push(i)
-      end
+      selected.push(i) if yield(i)
     end
     selected
+  end
+
+  def my_all?
+    result = true
+    for i in self
+      result = false unless yield i
+    end
+    result
   end
 end
 
@@ -30,8 +36,9 @@ hash = {:one => 1, :two => 2}
 hash.my_each {|k, v| puts "#{k} => #{v}"}
 
 arr = [1, 2, 5, 3, 4]
-p arr.my_select {|i| arr[i] > 1}
+p arr.my_all? {|i| i > 1}
 
 friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
 
-friends.my_select { |friend| friend != 'Brian' }
+p friends.my_select { |friend| friend != 'Brian' }
+
