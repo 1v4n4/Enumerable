@@ -55,6 +55,14 @@ module Enumerable
     return counter
   end
 
+  def my_map
+    mapped = []
+    for i in self
+      mapped.push(yield i)
+    end
+    mapped
+  end
+
 end
 
 
@@ -63,7 +71,7 @@ hash = {:one => 1, :two => 2}
 hash.my_each {|k, v| puts "#{k} => #{v}"}
 
 arr = [1, 2, 5, 3, 4]
-p arr.my_count {|i| i > 3}
+p arr.my_map {|i| i*3}
 
 friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
 
