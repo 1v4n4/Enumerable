@@ -1,5 +1,7 @@
 module Enumerable
   def my_each
+    return to_enum(:my_each) unless block_given?
+
     for i in self
       yield(i)
     end
@@ -7,8 +9,16 @@ module Enumerable
   end
 
   def my_each_with_index
-    for i in self
-      yield i, i - 1
+    return to_enum(:my_each_with_index) unless block_given?
+
+    if self.class == Array
+      for i in self
+        yield i, self.index(i)
+      end      
+    elsif ((self.class == Range) || (self.class == Hash))
+      for i in self
+        yield i, to_a.index(i)
+      end
     end
   end
 
@@ -82,5 +92,5 @@ def multiply_els(ar)
   ar.my_inject(1) {|multiply, num| multiply * num}
 end
 
-arr = [2, 4, 5]
-p arr.my_map(Proc.new {|x| x * 2})
+arr = {:name => "Ivana", :country => "Montenegero"}
+p arr.my_each_with_index {|val, indx|  puts "value: #{val}| index: #{indx}"}
