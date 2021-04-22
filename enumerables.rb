@@ -117,17 +117,29 @@ module Enumerable
     result
   end
 
-  def my_count
+  def my_count (args=nil)
     counter = 0
-    for i in self
-      if yield(i)
-        counter +=1
+    if !block_given?
+      if args.nil?
+        for i in self
+          counter+=1
+        end
+      else
+        for i in self
+          counter+=1 if i == args
+        end
+      end
+    else
+      for i in self
+        if yield(i)
+          counter +=1
+        end
       end
     end
     return counter
   end
 
-  def my_map(proc = nil)
+def my_map(proc = nil)
     mapped = []
     if proc
       for i in self
@@ -158,3 +170,8 @@ arr = [3, 4, 6, 2]
 arr.my_any? {|num| num > 6}
 
 p [nil].my_none?
+
+ary = [1, 2, 4, 2]
+p ary.my_count
+p ary.my_count(2)
+p ary.my_count{ |x| x%2==0 }
