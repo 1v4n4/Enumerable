@@ -207,7 +207,3 @@ end
 def multiply_els(arr)
   arr.my_inject(1) { |multiply, num| multiply * num }
 end
-
-p [1,2,3,4,5].my_select { |num|  num.even?  }   #=> [2, 4]
-
-
