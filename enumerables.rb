@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ModuleLength
 
 module Enumerable
   def my_each
@@ -151,7 +152,7 @@ def my_map(proc = nil)
   def my_inject (init = nil, sym = nil)
     if block_given?
       acc = init
-      self.to_a.my_each do |i|
+      to_a.my_each do |i|
         if !acc.nil?
           acc = yield(acc, i)
         else
@@ -161,7 +162,7 @@ def my_map(proc = nil)
       acc
     elsif init.is_a?(Symbol)
       acc = nil
-      self.to_a.my_each do |i|
+      to_a.my_each do |i|
         if acc.nil?
           acc = i
         else
