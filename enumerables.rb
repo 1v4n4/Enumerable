@@ -1,3 +1,4 @@
+
 module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
@@ -99,7 +100,7 @@ module Enumerable
         result = true
       else
         for i in self
-          result = false if i == true 
+          result = false if i == true
         end
       end
     else
@@ -133,8 +134,9 @@ module Enumerable
   end
 
 def my_map(proc = nil)
-    mapped = []
-    if proc
+  return to_enum(:my_map) unless block_given?
+  mapped = []
+        if proc
       for i in self
         mapped.push(proc.call(i))
       end
@@ -146,12 +148,6 @@ def my_map(proc = nil)
     mapped
   end
 
-#   searches for the longest word in an array of strings
-#  when a block is given without an initial value combines all elements of enum by applying a binary operation, specified by a block::range
-#  when a symbol is specified without an initial value combines each element of the collection by applying the symbol as a named method
-#  when a symbol is specified without an initial value combines each element of the collection by applying the symbol as a named method:range
-#  when a symbol is specified with an initial value combines each element of the collection by applying the symbol as a named method
-#  when a symbol is specified with an initial value combines each element of the collection by applying the symbol as a named method::range
   def my_inject (init = nil, sym = nil)
     if block_given?
       acc = init
@@ -166,45 +162,28 @@ def my_map(proc = nil)
     elsif init.is_a?(Symbol)
       acc = nil
       self.to_a.my_each do |i|
-        if !acc.nil?
-          acc = acc.send(init, i)
-        else
+        if acc.nil?
           acc = i
+        else
+          acc = acc.send(init, i)
         end
       end
       acc
-    elsif (sym.is_a?(Symbol) && init.is_a?(Integer)) 
+    elsif sym.is_a?(Symbol) && init.is_a?(Integer)
       acc = init
-      self.to_a.my_each do |i|
+      to_a.my_each do |i|
         acc = acc.send(sym, i)
       end
       acc
     else
-      self.my_each do |i|
+      my_each do |i|
         acc = yield acc, i
       end
     end
     acc
   end
-
 end
 
-def multiply_els(ar)
-  ar.my_inject(1) {|multiply, num| multiply * num}
+def multiply_els(arr)
+  arr.my_inject(1) { |multiply, num| multiply * num }
 end
-
-arr = [3, 4, 6, 2]
-arr.my_any? {|num| num > 6}
-
-# longest = %w{ cat sheep bear }.inject do |memo, word|
-#   memo.length > word.length ? memo : word
-# end
-
-# puts longest
-
-p (5..10).my_inject(:+)
-p (5..10).my_inject { |sum, n| sum + n }
-p (5..10).my_inject(1, :*)
-p (5..10).my_inject(1) { |product, n| product * n }
-sentences = ["The ice cream truck is rolling on by", "There is a dog in the park", "There are jumping lizards on the fountain", "Why is there no rain today? I brought an umbrella for nothing.", "There is a dog park nearby!"]
-p sentences.inject{ |memo, sentence| memo.size < sentence.size ? memo = sentence : memo}
