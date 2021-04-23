@@ -1,4 +1,7 @@
-# rubocop:disable Metrics/ModuleLength
+# rubocop: disable Metrics/ModuleLength
+# rubocop: disable Metrics/BlockNesting
+# rubocop: disable Lint/UselessAssignment
+# rubocop: disable Metrics/PerceivedComplexity
 module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
@@ -72,7 +75,7 @@ module Enumerable
       end
     elsif !args.nil? && (args.is_a? Class)
       for i in self
-        result = true if i.class == args
+        result = true if i.class.is_a?(args)
       end
     elsif !args.nil? && (args == Regexp)
       for i in self
@@ -92,16 +95,16 @@ module Enumerable
       for i in self
         result = false if yield i
       end
-    elsif !args.nil? && (args.is_a?(Class))
+    elsif !args.nil? && args.is_a?(Class)
       for i in self
-        result = false if i.class == args
+        result = false if i.class.is_a?(args)
       end
     elsif !args.nil? && (args == Regexp)
       for i in self
         result = false if args.match(i)
       end
     elsif length >= 1
-      if length == 1 and self[0] == nil
+      if length == 1 and self[0].nil?
         result = true
       else
         for i in self
@@ -116,32 +119,35 @@ module Enumerable
     result
   end
 
-  def my_count (args=nil)
+  def my_count(args = nil)
     counter = 0
-    if !block_given?
+    if block_given?
+      for i in self
+        counter += 1 if yield(i)
+      end
+    else
+      # rubocop: disable Style/IfInsideElse
       if args.nil?
         for i in self
-          counter+=1
+          counter += 1
         end
       else
         for i in self
-          counter+=1 if i == args
+          counter += 1 if i == args
         end
       end
-    else
-      for i in self
-        if yield(i)
-          counter +=1
-        end
-      end
+      # rubocop: enable Style/IfInsideElse
     end
-    return counter
+    counter
   end
 
-def my_map(proc = nil)
-  return to_enum(:my_map) unless block_given?
-  mapped = []
-        if proc
+  def my_map(proc = nil)
+    # rubocop: disable Lint/ToEnumArguments
+    return to_enum(:my_map) unless block_given?
+    # rubocop: enable Lint/ToEnumArguments
+
+    mapped = []
+    if proc
       for i in self
         mapped.push(proc.call(i))
       end
@@ -153,14 +159,15 @@ def my_map(proc = nil)
     mapped
   end
 
-  def my_inject (init = nil, sym = nil)
+  def my_inject(init = nil, sym = nil)
     if block_given?
       acc = init
+      # rubocop:disable Style/ConditionalAssignment
       to_a.my_each do |i|
-        if !acc.nil?
-          acc = yield(acc, i)
-        else
+        if acc.nil?
           acc = i
+        else
+          acc = yield(acc, i)
         end
       end
       acc
@@ -187,12 +194,20 @@ def my_map(proc = nil)
     end
     acc
   end
+  # rubocop: enable Style/ConditionalAssignment
   # rubocop: enable Style/For
   # rubocop: enable Metrics/ModuleLength
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/MethodLength
+  # rubocop: enable Metrics/BlockNesting
+  # rubocop: enable Lint/UselessAssignment
+  # rubocop: enable Metrics/PerceivedComplexity
 end
 
 def multiply_els(arr)
   arr.my_inject(1) { |multiply, num| multiply * num }
 end
+
+p [1,2,3,4,5].my_select { |num|  num.even?  }   #=> [2, 4]
+
+
