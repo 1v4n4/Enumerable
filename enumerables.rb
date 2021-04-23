@@ -1,32 +1,34 @@
 # rubocop:disable Metrics/ModuleLength
-
 module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
 
+    # rubocop:disable Style/For
     for i in self
       yield(i)
     end
     self
   end
+  # rubocop:enable Style/For
 
   def my_each_with_index
     return to_enum(:my_each_with_index) unless block_given?
 
-    if self.class == Array
+    if instance_of?(Array)
+      # rubocop:disable Style/For
       for i in self
-        yield i, self.index(i)
+        yield i, index(i)
       end
-    elsif ((self.class == Range) || (self.class == Hash))
+    elsif istance_of(Range) || instance_of?(Hash)
       for i in self
         yield i, to_a.index(i)
       end
     end
   end
 
-
   def my_select
     return to_enum(:my_select) unless block_given?
+
     selected = []
     for i in self
       selected.push(i) if yield(i)
@@ -34,6 +36,8 @@ module Enumerable
     selected
   end
 
+  # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/MethodLength
   def my_all?(args = nil)
     result = true
     if block_given?
@@ -50,7 +54,7 @@ module Enumerable
       end
     elsif !args.nil? and (args.is_a? Regexp)
       for i in self
-        result = false if !(args.match(i))
+        result = false unless args.match(i)
       end
     else
       for i in self
@@ -60,7 +64,7 @@ module Enumerable
     result
   end
 
-  def my_any? (args = nil)
+  def my_any?(args = nil)
     result = false
     if block_given?
       for i in self
@@ -96,8 +100,8 @@ module Enumerable
       for i in self
         result = false if args.match(i)
       end
-    elsif self.length >= 1
-      if self.length == 1 and self[0] == nil
+    elsif length >= 1
+      if length == 1 and self[0] == nil
         result = true
       else
         for i in self
@@ -183,6 +187,10 @@ def my_map(proc = nil)
     end
     acc
   end
+  # rubocop: enable Style/For
+  # rubocop: enable Metrics/ModuleLength
+  # rubocop: enable Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/MethodLength
 end
 
 def multiply_els(arr)
