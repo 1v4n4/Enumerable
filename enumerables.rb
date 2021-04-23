@@ -80,15 +80,6 @@ module Enumerable
     result
   end
 
-# when no block or argument is given returns true only if none of the collection members is true
-# when no block or argument is given returns false only if one of the collection members is true
-# when a class is passed as an argument returns true if none of the collection is a member of such class
-# when a class is passed as an argument returns true if none of the collection is a member of such class::Numeric
-# when a class is passed as an argument returns false if any of the collection is a member of such class
-# when a Regex is passed as an argument returns true if none of the collection matches the Regex
-# when a Regex is passed as an argument returns false if any of the collection matches the Regex
-# when a pattern other than Regex or a Class is given returns true only if none of the collection matches the pattern
-# when a pattern other than Regex or a Class is given returns false only if one of the collection matches the pattern
   def my_none?(args = nil)
     result = true
     if block_given?
@@ -155,20 +146,45 @@ def my_map(proc = nil)
     mapped
   end
 
-  def my_inject (result = 0, sym)
-    p self.to_a
-    if (sym.is_a?(Symbol) && result.is_a?(Integer)) 
+#   searches for the longest word in an array of strings
+#  when a block is given without an initial value combines all elements of enum by applying a binary operation, specified by a block::range
+#  when a symbol is specified without an initial value combines each element of the collection by applying the symbol as a named method
+#  when a symbol is specified without an initial value combines each element of the collection by applying the symbol as a named method:range
+#  when a symbol is specified with an initial value combines each element of the collection by applying the symbol as a named method
+#  when a symbol is specified with an initial value combines each element of the collection by applying the symbol as a named method::range
+  def my_inject (init = nil, sym = nil)
+    if block_given?
+      acc = init
       self.to_a.my_each do |i|
-        puts i
-        result = result.send(sym, i)
+        if !acc.nil?
+          acc = yield(acc, i)
+        else
+          acc = i
+        end
       end
+      acc
+    elsif init.is_a?(Symbol)
+      acc = nil
+      self.to_a.my_each do |i|
+        if !acc.nil?
+          acc = acc.send(init, i)
+        else
+          acc = i
+        end
+      end
+      acc
+    elsif (sym.is_a?(Symbol) && init.is_a?(Integer)) 
+      acc = init
+      self.to_a.my_each do |i|
+        acc = acc.send(sym, i)
+      end
+      acc
     else
       self.my_each do |i|
-        result = yield result, i
-        return result
+        acc = yield acc, i
       end
     end
-    return result
+    acc
   end
 
 end
@@ -180,4 +196,15 @@ end
 arr = [3, 4, 6, 2]
 arr.my_any? {|num| num > 6}
 
-p [nil, false, true].my_none?
+# longest = %w{ cat sheep bear }.inject do |memo, word|
+#   memo.length > word.length ? memo : word
+# end
+
+# puts longest
+
+p (5..10).my_inject(:+)
+p (5..10).my_inject { |sum, n| sum + n }
+p (5..10).my_inject(1, :*)
+p (5..10).my_inject(1) { |product, n| product * n }
+sentences = ["The ice cream truck is rolling on by", "There is a dog in the park", "There are jumping lizards on the fountain", "Why is there no rain today? I brought an umbrella for nothing.", "There is a dog park nearby!"]
+p sentences.inject{ |memo, sentence| memo.size < sentence.size ? memo = sentence : memo}
