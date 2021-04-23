@@ -95,7 +95,7 @@ module Enumerable
       for i in self
         result = false if yield i
       end
-    elsif !args.nil? && (args.is_a? Class)
+    elsif !args.nil? && (args.is_a?(Class))
       for i in self
         result = false if i.class == args
       end
@@ -103,10 +103,12 @@ module Enumerable
       for i in self
         result = false if args.match(i)
       end
-    elsif self.length == 1
-      for i in self
-        if i == nil
-          result = true
+    elsif self.length >= 1
+      if self.length == 1 and self[0] == nil
+        result = true
+      else
+        for i in self
+          result = false if i == true 
         end
       end
     else
@@ -178,4 +180,4 @@ end
 arr = [3, 4, 6, 2]
 arr.my_any? {|num| num > 6}
 
-p (1..5).my_inject(1, :*)
+p [nil, false, true].my_none?
