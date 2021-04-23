@@ -153,11 +153,20 @@ def my_map(proc = nil)
     mapped
   end
 
-  def my_inject (result = 0)
-    self.my_each do |i|
-      result = yield result, i
+  def my_inject (result = 0, sym)
+    p self.to_a
+    if (sym.is_a?(Symbol) && result.is_a?(Integer)) 
+      self.to_a.my_each do |i|
+        puts i
+        result = result.send(sym, i)
+      end
+    else
+      self.my_each do |i|
+        result = yield result, i
+        return result
+      end
     end
-    result
+    return result
   end
 
 end
@@ -169,9 +178,4 @@ end
 arr = [3, 4, 6, 2]
 arr.my_any? {|num| num > 6}
 
-p [nil].my_none?
-
-ary = [1, 2, 4, 2]
-p ary.my_count
-p ary.my_count(2)
-p ary.my_count{ |x| x%2==0 }
+p (1..5).my_inject(1, :*)
