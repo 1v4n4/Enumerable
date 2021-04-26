@@ -40,22 +40,38 @@ module Enumerable
   # rubocop: disable Metrics/MethodLength
   def my_all?(args = nil)
     if args
-      my_each { |i| return false unless args == i }
+      for i in self
+        # rubocop: disable Style/CaseEquality
+        return false unless args === i
+        # rubocop: enable Style/CaseEquality
+      end
     elsif block_given?
-      my_each { |i| return false unless yield(i) }
+      for i in self
+        return false unless yield(i)
+      end
     else
-      my_each { |i| return false unless i }
+      for i in self
+        return false unless i
+      end
     end
     true
   end
 
   def my_any?(args = nil)
     if args
-      my_each { |i| return true if args == i }
+      for i in self
+        # rubocop: disable Style/CaseEquality
+        return true if args === i
+        # rubocop: enable Style/CaseEquality
+      end
     elsif block_given?
-      my_each { |i| return true if yield(i) }
+      for i in self
+        return true if yield(i)
+      end
     else
-      my_each { |i| return true if i }
+      for i in self
+        return true if i
+      end
     end
     false
   end
