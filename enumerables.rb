@@ -16,13 +16,11 @@ module Enumerable
 
   def my_each_with_index
     return to_enum(:my_each_with_index) unless block_given?
-
-    if instance_of?(Array)
-      # rubocop:disable Style/For
+    if is_a?(Array)
       for i in self
         yield i, index(i)
       end
-    elsif istance_of(Range) || instance_of?(Hash)
+    elsif is_a?(Range) || is_a?(Hash)
       for i in self
         yield i, to_a.index(i)
       end
@@ -53,7 +51,7 @@ module Enumerable
       end
     elsif !args.nil? and (args.is_a? Class)
       for i in self
-        result = false if i.class != args
+        result = false unless [i.class].include?(args)
       end
     elsif !args.nil? and (args.is_a? Regexp)
       for i in self
