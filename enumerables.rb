@@ -2,20 +2,22 @@
 # rubocop: disable Metrics/BlockNesting
 # rubocop: disable Lint/UselessAssignment
 # rubocop: disable Metrics/PerceivedComplexity
+# rubocop: disable Style/For
 module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
 
-    # rubocop:disable Style/For
     for i in self
       yield(i)
     end
     self
   end
-  # rubocop:enable Style/For
 
   def my_each_with_index
+    # rubocop: disable Layout/TrailingWhitespace 
     return to_enum(:my_each_with_index) unless block_given?
+    
+    # rubocop: enable Layout/TrailingWhitespace
     if is_a?(Array)
       for i in self
         yield i, index(i)
@@ -71,14 +73,17 @@ module Enumerable
       for i in self
         result = true if yield i
       end
-    elsif !args.nil? && (args.is_a?(Class))
+    elsif args.is_a?(Class)
       for i in self
-        result = true if i.class == args
+        result = true if i.class.is_a?(args)
       end
       return result
-    elsif !args.nil? && (args.is_a?(Regexp))
+    elsif args.is_a?(Regexp)
       for i in self
-        result = true if args.match(i)
+        if i.match(args)
+          result = true
+          return result
+        end
       end
     else
       for i in self
@@ -98,9 +103,9 @@ module Enumerable
       for i in self
         result = false if i.is_a?(args)
       end
-    elsif !args.nil? && (args == Regexp)
+    elsif args.is_a?(Regexp)
       for i in self
-        result = false if args.match(i)
+        result = false if i.match(args)
       end
     elsif length >= 1
       if length == 1 and self[0].nil?
@@ -194,23 +199,15 @@ module Enumerable
     acc
   end
   # rubocop: enable Style/ConditionalAssignment
-  # rubocop: enable Style/For
   # rubocop: enable Metrics/ModuleLength
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/MethodLength
   # rubocop: enable Metrics/BlockNesting
   # rubocop: enable Lint/UselessAssignment
+  # rubocop: enable Style/For
   # rubocop: enable Metrics/PerceivedComplexity
 end
 
 def multiply_els(arr)
   arr.my_inject(1) { |multiply, num| multiply * num }
 end
-
-
-p %w[ant bear cat].my_any? { |word| word.length >= 3 } #=> true
-p %w[ant bear cat].my_any? { |word| word.length >= 4 } #=> true
-p %w[ant bear cat].my_any?(/d/)                        #=> false
-p [nil, true, 99].my_any?(Integer)                     #=> true
-p [nil, true, 99].my_any?                              #=> true
-p [].my_any?                                           #=> false
