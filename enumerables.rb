@@ -13,25 +13,17 @@ module Enumerable
     self
   end
 
-  def my_each_with_index    return enum_for unless block_given?
-    idx = 0
-    arr ||= to_a    while idx < arr.length      yield(arr[idx], idx)      idx += 1    end
-    self  end
-
   def my_each_with_index
-    # rubocop: disable Layout/TrailingWhitespace 
-    return to_enum(:my_each_with_index) unless block_given?
+    # rubocop: disable Layout/TrailingWhitespace
+    return enum_for unless block_given?
     
-    # rubocop: enable Layout/TrailingWhitespace
-    if is_a?(Array)
-      for i in self
-        yield i, index(i)
-      end
-    elsif is_a?(Range) || is_a?(Hash)
-      for i in self
-        yield i, to_a.index(i)
-      end
+    idx = 0
+    arr ||= to_a
+    while idx < arr.length
+      yield(arr[idx], idx)
+      idx += 1
     end
+    self
   end
 
   def my_select
@@ -47,87 +39,29 @@ module Enumerable
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/MethodLength
   def my_all?(args = nil)
-    result = true
-    if block_given?
-      for i in self
-        result = false unless yield i
-      end
-    elsif args.nil?
-      for i in self
-        result = false if i.nil? || i == false
-      end
-    elsif args.is_a?(Class)
-      for i in self
-        result = false if !(i.is_a?(args))
-      end
-    elsif !args.nil? and (args.is_a? Regexp)
-      for i in self
-        result = false unless args.match(i)
-      end
+    if args
+      my_each { |i| return false unless args == i }
+    elsif block_given?
+      my_each { |i| return false unless yield(i) }
     else
-      for i in self
-        result = false if i != args
-      end
+      my_each { |i| return false unless i }
     end
-    result
+    true
   end
 
   def my_any?(args = nil)
-    result = false
-    if block_given?
-      for i in self
-        result = true if yield i
-      end
-    elsif args.is_a?(Class)
-      for i in self
-        result = true if i.is_a?(args)
-      end
-    elsif args.is_a?(Regexp)
-      for i in self
-        if i.match(args)
-          result = true
-        end
-      end
-    elsif !block_given? && args == nil
-      for i in self
-        return false if i.nil? || i == false
-      end
-    end
-    result
-  end
-
-  def my_none?(args = nil)
-    result = true
-    if block_given?
-      for i in self
-        result = false if yield i
-      end
-    elsif args.is_a?(Class)
-      for i in self
-        result = false if i.is_a?(args)
-      end
-    elsif args.is_a?(Regexp)
-      for i in self
-        result = false if i.match(args)
-      end
-    elsif length >= 1
-      if length == 1 and self[0].nil?
-        result = true
-      else
-        for i in self
-          result = false if i == true
-        end
-      end
-    elsif !(args.is_a?(Regexp)) && !(args.is_a?(Class))
-      for i in self
-        result = false if i == args
-      end
+    if args
+      my_each { |i| return true if args == i }
+    elsif block_given?
+      my_each { |i| return true if yield(i) }
     else
-      for i in self
-        result = false if i == args
-      end
+      my_each { |i| return true if i }
     end
-    result
+    false
+  end
+  
+  def my_none?(args = nil, &block)
+    !my_any?(args, &block)
   end
 
   def my_count(args = nil)
@@ -213,19 +147,9 @@ module Enumerable
   # rubocop: enable Lint/UselessAssignment
   # rubocop: enable Style/For
   # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Layout/TrailingWhitespace
 end
 
 def multiply_els(arr)
   arr.my_inject(1) { |multiply, num| multiply * num }
 end
-
-some_array = [1,2,3,4, "Lol"]
-
-p %w{ant bear cat}.my_none? { |word| word.length == 5 } #=> true
-p %w{ant bear cat}.my_none? { |word| word.length >= 4 } #=> false
-p %w{ant bear cat}.my_none?(/d/)                        #=> true
-p [1, 3.14, 42].my_none?(Float)                         #=> false
-p [].my_none?                                           #=> true
-p [nil].my_none?                                        #=> true
-p [nil, false].my_none?                                 #=> true
-p [nil, false, true].my_none?                           #=> false
