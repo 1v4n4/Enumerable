@@ -94,9 +94,9 @@ module Enumerable
       for i in self
         result = false if yield i
       end
-    elsif !args.nil? && args.is_a?(Class)
+    elsif args.is_a?(Class)
       for i in self
-        result = false if i.class.is_a?(args)
+        result = false if i.is_a?(args)
       end
     elsif !args.nil? && (args == Regexp)
       for i in self
