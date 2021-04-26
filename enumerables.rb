@@ -13,6 +13,11 @@ module Enumerable
     self
   end
 
+  def my_each_with_index    return enum_for unless block_given?
+    idx = 0
+    arr ||= to_a    while idx < arr.length      yield(arr[idx], idx)      idx += 1    end
+    self  end
+
   def my_each_with_index
     # rubocop: disable Layout/TrailingWhitespace 
     return to_enum(:my_each_with_index) unless block_given?
@@ -51,9 +56,9 @@ module Enumerable
       for i in self
         result = false if i.nil? || i == false
       end
-    elsif !args.nil? and (args.is_a? Class)
+    elsif args.is_a?(Class)
       for i in self
-        result = false unless [i.class].include?(args)
+        result = false if !(i.is_a?(args))
       end
     elsif !args.nil? and (args.is_a? Regexp)
       for i in self
@@ -75,19 +80,17 @@ module Enumerable
       end
     elsif args.is_a?(Class)
       for i in self
-        result = true if i.class.is_a?(args)
+        result = true if i.is_a?(args)
       end
-      return result
     elsif args.is_a?(Regexp)
       for i in self
         if i.match(args)
           result = true
-          return result
         end
       end
-    else
+    elsif !block_given? && args == nil
       for i in self
-        result = true if i == args
+        return false if i.nil? || i == false
       end
     end
     result
@@ -114,6 +117,10 @@ module Enumerable
         for i in self
           result = false if i == true
         end
+      end
+    elsif !(args.is_a?(Regexp)) && !(args.is_a?(Class))
+      for i in self
+        result = false if i == args
       end
     else
       for i in self
@@ -211,3 +218,14 @@ end
 def multiply_els(arr)
   arr.my_inject(1) { |multiply, num| multiply * num }
 end
+
+some_array = [1,2,3,4, "Lol"]
+
+p %w{ant bear cat}.my_none? { |word| word.length == 5 } #=> true
+p %w{ant bear cat}.my_none? { |word| word.length >= 4 } #=> false
+p %w{ant bear cat}.my_none?(/d/)                        #=> true
+p [1, 3.14, 42].my_none?(Float)                         #=> false
+p [].my_none?                                           #=> true
+p [nil].my_none?                                        #=> true
+p [nil, false].my_none?                                 #=> true
+p [nil, false, true].my_none?                           #=> false
