@@ -71,11 +71,12 @@ module Enumerable
       for i in self
         result = true if yield i
       end
-    elsif !args.nil? && (args.is_a? Class)
+    elsif !args.nil? && (args.is_a?(Class))
       for i in self
-        result = true if i.class.is_a?(args)
+        result = true if i.class == args
       end
-    elsif !args.nil? && (args == Regexp)
+      return result
+    elsif !args.nil? && (args.is_a?(Regexp))
       for i in self
         result = true if args.match(i)
       end
@@ -205,3 +206,11 @@ end
 def multiply_els(arr)
   arr.my_inject(1) { |multiply, num| multiply * num }
 end
+
+
+p %w[ant bear cat].my_any? { |word| word.length >= 3 } #=> true
+p %w[ant bear cat].my_any? { |word| word.length >= 4 } #=> true
+p %w[ant bear cat].my_any?(/d/)                        #=> false
+p [nil, true, 99].my_any?(Integer)                     #=> true
+p [nil, true, 99].my_any?                              #=> true
+p [].my_any?                                           #=> false
