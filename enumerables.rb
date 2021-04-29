@@ -104,11 +104,11 @@ module Enumerable
 
   def my_map(proc = nil)
     # rubocop: disable Lint/ToEnumArguments
-    return to_enum(:my_map) unless block_given?
+    return to_enum(:my_map) if proc.nil? and !block_given?
     # rubocop: enable Lint/ToEnumArguments
-
     mapped = []
-    if proc
+    if !proc.nil?
+      p "I am Proc"
       for i in self
         mapped.push(proc.call(i))
       end
