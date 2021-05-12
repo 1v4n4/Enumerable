@@ -16,7 +16,7 @@ module Enumerable
   def my_each_with_index
     # rubocop: disable Layout/TrailingWhitespace
     return enum_for unless block_given?
-    
+
     idx = 0
     arr ||= to_a
     while idx < arr.length
@@ -75,7 +75,7 @@ module Enumerable
     end
     false
   end
-  
+
   def my_none?(args = nil, &block)
     !my_any?(args, &block)
   end
@@ -169,3 +169,7 @@ end
 def multiply_els(arr)
   arr.my_inject(1) { |multiply, num| multiply * num }
 end
+
+p [1,2,3,4,5].my_inject {|acc, x| acc+x*2}
+ hash = {one: "first", two: "second", three: "third", four: "fourth", five: "fifth"}
+p hash.my_select { |k,v| v=="second" || v=="fifth"}

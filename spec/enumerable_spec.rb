@@ -42,4 +42,26 @@ describe Enumerable do
 
   end
 
+  describe '#my_inject' do
+
+    it 'raises LocalJumpError if no block or proc given' do
+      expect { arr.my_inject }.to raise_error(LocalJumpError)
+    end
+
+    it 'if block given, for each element is passed to an accumulator value, which is returned' do
+      expect(arr.my_inject {|acc, x| acc+x*2}).to eql(29)
+    end
+
+    it 'works with initialized value of accumulator' do
+      expect(arr.my_inject(20) {|acc, x| acc+x*2}).to eql(50)
+    end
+
+    it 'if symbol specified, each element in the collection will be passed to the named method of accumulator' do
+     expect(arr.my_inject(:+)).to eql(15)
+    end
+
+    it 'works with symbol specified, and initialized value of accumulator' do
+     expect(arr.my_inject(20,:+)).to eql(35)
+    end
+   end
 end
