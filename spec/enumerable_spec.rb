@@ -42,6 +42,23 @@ describe Enumerable do
 
   end
 
+  describe '#my_select' do
+    it "returns enumerator if no block given" do
+      expect(hash.my_select).to be_a(Enumerator)
+    end
+
+    it 'returns an array of elements for which the given block returns a true value' do
+      expect(arr.my_select { |x| x.even? }).to eql([2, 4])
+      expect(hash.my_select { |k,v| v=="second" || v=="fifth"}).to be_a(Array)
+    end
+
+    it 'call a block, iterate over the argument and update a new argument' do
+     new_variable = Array.new
+     expect(hash.my_select { |k,v| k == :one}).to eq([[:one, 'first']])
+    end
+
+  end
+
   describe '#my_inject' do
 
     it 'raises LocalJumpError if no block or proc given' do
@@ -63,5 +80,5 @@ describe Enumerable do
     it 'works with symbol specified, and initialized value of accumulator' do
      expect(arr.my_inject(20,:+)).to eql(35)
     end
-   end
+  end
 end
