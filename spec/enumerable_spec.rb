@@ -111,7 +111,33 @@ describe Enumerable do
     it 'if pattern supplied, returns false if pattern is not equal to any element in a collection' do
       expect(arr_string.my_any? (/[0-9]/)).to be false
     end
+  end
 
+  describe '#my_none?' do
+    it 'passes each element of the collection to the given block and returns true if the block never returns true' do
+      expect(arr_string.my_none? {|x| x.instance_of?(Integer)}).to be true
+    end
+
+    it 'passes each element of the collection to the given block and returns false if the block at least once returns true' do
+      expect(arr.my_none? {|x| x==1}).to be false
+    end
+
+    it 'if block not given, returns true if none of the collection members is true' do
+      expect(arr_none.my_none?).to be true
+    end
+
+    it 'if block not given, returns false if at least one of the collection members is true' do
+      expect(arr_false.my_none?).to be false
+    end
+
+
+    it "if pattern supplied, the returns true if none of collection's members matches pattern" do
+      expect(arr_string.my_none? (/t/)).to be false
+    end
+
+    it "if pattern supplied, the returns true if none of collection's members matches pattern" do
+      expect(arr_string.my_none? (/[0-9]/)).to be true
+    end
   end
 
   describe '#my_inject' do
