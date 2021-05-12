@@ -81,4 +81,11 @@ describe Enumerable do
      expect(arr.my_inject(20,:+)).to eql(35)
     end
   end
+
+  describe '#multiply_els' do
+    it 'multiplies all values of the argument, and returns result' do
+      expect(multiply_els(arr)).to eql(120)
+    end
+  end
+
 end
