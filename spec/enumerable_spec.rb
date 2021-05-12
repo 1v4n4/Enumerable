@@ -155,6 +155,15 @@ describe Enumerable do
 
   end
 
+describe "#my_map" do
+  it 'returns a new array with the results of running block once for every element in collection' do
+    expect(arr.my_map {|x| x*2}).to eql([2,4,6,8,10])
+  end
+
+  it 'if no block is given, returns an enumerator' do
+    expect(arr.my_map).to be_a(Enumerator)
+  end
+end
 
   describe '#my_inject' do
 
