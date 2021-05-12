@@ -140,6 +140,22 @@ describe Enumerable do
     end
   end
 
+  describe '#my_count' do
+    it 'returns a number of elements in collection, if no argument or block given' do
+     expect(arr.my_count).to eql(5)
+    end
+
+    it 'if argument is given, returns the number of items in collection that are equal argument' do
+      expect(arr.my_count(4)).to eql(1)
+    end
+
+    it 'if block is given, counts the number of elements yielding a true value' do
+      expect(arr.my_count {|x| x.odd? }).to be (3)
+    end
+
+  end
+
+
   describe '#my_inject' do
 
     it 'raises LocalJumpError if no block or proc given' do
