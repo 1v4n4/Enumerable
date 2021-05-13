@@ -14,7 +14,6 @@ module Enumerable
   end
 
   def my_each_with_index
-    # rubocop: disable Layout/TrailingWhitespace
     return enum_for unless block_given?
 
     idx = 0
@@ -106,9 +105,9 @@ module Enumerable
     # rubocop: disable Lint/ToEnumArguments
     return to_enum(:my_map) if proc.nil? and !block_given?
     # rubocop: enable Lint/ToEnumArguments
+
     mapped = []
     if !proc.nil?
-      p "I am Proc"
       for i in self
         mapped.push(proc.call(i))
       end
@@ -163,13 +162,8 @@ module Enumerable
   # rubocop: enable Lint/UselessAssignment
   # rubocop: enable Style/For
   # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Layout/TrailingWhitespace
 end
 
 def multiply_els(arr)
   arr.my_inject(1) { |multiply, num| multiply * num }
 end
-
-p [1,2,3,4,5].my_inject {|acc, x| acc+x*2}
- hash = {one: "first", two: "second", three: "third", four: "fourth", five: "fifth"}
-p hash.my_select { |k,v| v=="second" || v=="fifth"}
