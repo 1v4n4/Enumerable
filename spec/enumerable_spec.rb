@@ -47,6 +47,9 @@ describe Enumerable do
 
     it 'returns an array of elements for which the given block returns a true value' do
       expect(arr.my_select { |x| x < 4 }).to eql([1, 2, 3])
+    end
+
+    it 'returns an array of elements for which the given block returns a true value' do
       expect(hash.my_select { |_k, v| %w[second fifth].include?(v) }).to be_a(Array)
     end
   end
@@ -56,8 +59,11 @@ describe Enumerable do
       expect(arr.my_all? { |x| x < 100 }).to be true
     end
 
+    # rubocop: disable Style/EvenOdd
+    # rubocop: disable Style/NumericPredicate
+
     it "passes each element of the collection to the block and returns false if doesn't get a true value" do
-      expect(arr.my_all? { |x| x % 2.positive? }).to be false
+      expect(arr.my_all? { |x| x % 2 == 0 }).to be false
     end
 
     it 'if block not given, returns true when none of the collection members are false or nil' do
@@ -164,9 +170,12 @@ describe Enumerable do
     end
 
     it 'if block is given, counts the number of elements yielding a true value' do
-      expect(arr.my_count { |x| x % 2.positive? }).to be(3)
+      expect(arr.my_count { |x| x % 2 != 0 }).to be(3)
     end
   end
+
+  # rubocop: enable Style/EvenOdd
+  # rubocop: enable Style/NumericPredicate
 
   describe '#my_map' do
     it 'returns a new array with the results of running block for every element in collection, if block given' do
@@ -175,6 +184,9 @@ describe Enumerable do
 
     it 'if proc given, returns a new array with the results of running proc for every element in collection' do
       expect(arr.my_map(proc { |x| x * 2 })).to eql([2, 4, 6, 8, 10])
+    end
+
+    it 'if proc given, returns a new array with the results of running proc for every element in collection' do
       expect(arr.my_map(&:to_s)).to eql(%w[1 2 3 4 5])
     end
 
