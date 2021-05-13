@@ -12,6 +12,12 @@ Additional description about the project and its features.
 
 ## Getting Started
 
+### Prerequisites
+
+- Text editor
+- GitHub
+- Git
+
 ### To get a local copy up and running simply follow the next step.
 
 Clone this repository on to your local PC
@@ -20,6 +26,10 @@ Clone this repository on to your local PC
 - In your local PC, open your terminal in the folder you would like to clone the repository into
 - Clone the repository with the command: `git clone (copied link)`; like so: `git clone https://github.com/1v4n4/Enumerables.git`
 - After the clone, type in the command `cd Enumerables` to access the directory on the terminal
+
+### Rspec
+
+To run the tests, enter the Enumerable directory and run rspec --init. Then run the file enumerable_spec.rb in the spec folder using rspec command.
 
 ## Authors
 
@@ -39,7 +49,7 @@ Clone this repository on to your local PC
 
 Contributions, issues, and feature requests are welcome!
 
-Feel free to check the [issues page](../../issues/).
+Feel free to check the [issues page](https://github.com/1v4n4/Enumerables/issues).
 
 ## Show your support
 

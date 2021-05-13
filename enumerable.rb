@@ -14,9 +14,8 @@ module Enumerable
   end
 
   def my_each_with_index
-    # rubocop: disable Layout/TrailingWhitespace
     return enum_for unless block_given?
-    
+
     idx = 0
     arr ||= to_a
     while idx < arr.length
@@ -75,7 +74,7 @@ module Enumerable
     end
     false
   end
-  
+
   def my_none?(args = nil, &block)
     !my_any?(args, &block)
   end
@@ -106,9 +105,9 @@ module Enumerable
     # rubocop: disable Lint/ToEnumArguments
     return to_enum(:my_map) if proc.nil? and !block_given?
     # rubocop: enable Lint/ToEnumArguments
+
     mapped = []
     if !proc.nil?
-      p "I am Proc"
       for i in self
         mapped.push(proc.call(i))
       end
@@ -163,7 +162,6 @@ module Enumerable
   # rubocop: enable Lint/UselessAssignment
   # rubocop: enable Style/For
   # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Layout/TrailingWhitespace
 end
 
 def multiply_els(arr)
