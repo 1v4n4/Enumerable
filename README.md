@@ -24,7 +24,7 @@ Clone this repository on to your local PC
 - Click on the `Code` green button
 - By the right end of the read-only input containing the repository link click the clipboard icon to copy the link
 - In your local PC, open your terminal in the folder you would like to clone the repository into
-- Clone the repository with the command: `git clone (copied link)`; like so: `git clone https://github.com/1v4n4/Enumerables.git`
+- Clone the repository with the command: `git clone (copied link)`; like so: `git clone https://github.com/1v4n4/Enumerable.git`
 - After the clone, type in the command `cd Enumerables` to access the directory on the terminal
 
 ### Rspec
@@ -49,7 +49,7 @@ To run the tests, enter the Enumerable directory and run rspec --init. Then run 
 
 Contributions, issues, and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/1v4n4/Enumerables/issues).
+Feel free to check the [issues page](https://github.com/1v4n4/Enumerable/issues).
 
 ## Show your support
 
