@@ -60,10 +60,9 @@ describe Enumerable do
     end
 
     # rubocop: disable Style/EvenOdd
-    # rubocop: disable Style/NumericPredicate
 
     it "passes each element of the collection to the block and returns false if doesn't get a true value" do
-      expect(arr.my_all? { |x| x % 2 == 0 }).to be false
+      expect(arr.my_all? { |x| x % 2 > 0 }).to be false
     end
 
     it 'if block not given, returns true when none of the collection members are false or nil' do
@@ -175,7 +174,6 @@ describe Enumerable do
   end
 
   # rubocop: enable Style/EvenOdd
-  # rubocop: enable Style/NumericPredicate
 
   describe '#my_map' do
     it 'returns a new array with the results of running block for every element in collection, if block given' do
