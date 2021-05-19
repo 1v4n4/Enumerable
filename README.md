@@ -43,7 +43,7 @@ To run the tests, enter the Enumerable directory and run rspec --init. Then run 
 
 - [Github](https://github.com/1v4n4)
 - [Twitter](https://twitter.com/codeIv1)
-- [LinkedIn](https://www.linkedin.com/in/ivana-novakovic-lekovic/)
+- [LinkedIn](https://www.linkedin.com/in/1v4n4/)
 
 ## 🤝 Contributing
 
